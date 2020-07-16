@@ -6,9 +6,8 @@ defmodule ElixirLS.LanguageServer.Providers.Formatting do
     function_exported?(Code, :format_string!, 2)
   end
 
-  def format(source_file, uri, project_dir) do
+  def format(source_file, uri, project_dir, opts) do
     if can_format?(uri, project_dir) do
-      opts = SourceFile.formatter_opts(uri)
       formatted = IO.iodata_to_binary([Code.format_string!(source_file.text, opts), ?\n])
 
       response =

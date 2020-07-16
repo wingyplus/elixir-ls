@@ -52,7 +52,8 @@ defmodule ElixirLS.LanguageServer.Server do
     requests: %{},
     # Tracks source files that are currently open in the editor
     source_files: %{},
-    awaiting_contracts: []
+    awaiting_contracts: [],
+    formatter_opts: []
   ]
 
   ## Client API
@@ -507,7 +508,7 @@ defmodule ElixirLS.LanguageServer.Server do
         {:error, :server_error, "Missing source file", state}
 
       source_file ->
-        fun = fn -> Formatting.format(source_file, uri, state.project_dir) end
+        fun = fn -> Formatting.format(source_file, uri, state.project_dir, state.formatter_opts) end
         {:async, fun, state}
     end
   end
@@ -612,7 +613,7 @@ defmodule ElixirLS.LanguageServer.Server do
           load_all_modules?: false
       }
     else
-      %__MODULE__{state | needs_build?: true, analysis_ready?: false}
+      %__MODULE__{state | needs_build?: true, analysis_ready?: false, formatter_opts: SourceFile.formatter_opts(state.project_dir)}
     end
   end
 
