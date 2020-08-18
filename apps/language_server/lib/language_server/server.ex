@@ -717,6 +717,12 @@ defmodule ElixirLS.LanguageServer.Server do
     files =
       Enum.uniq(Enum.map(new_diagnostics, & &1.file) ++ Enum.map(old_diagnostics, & &1.file))
 
+    files =
+      files
+      |> Enum.filter(fn file ->
+        Map.has_key?(source_files, SourceFile.path_to_uri(file))
+      end)
+
     for file <- files,
         uri = SourceFile.path_to_uri(file),
         do: Build.publish_file_diagnostics(uri, new_diagnostics, Map.get(source_files, uri))
