@@ -29,7 +29,8 @@ defmodule ElixirLS.LanguageServer.Server do
     WorkspaceSymbols,
     OnTypeFormatting,
     CodeLens,
-    ExecuteCommand
+    ExecuteCommand,
+    Folding
   }
 
   use Protocol
@@ -548,6 +549,17 @@ defmodule ElixirLS.LanguageServer.Server do
     {:ok, x, state}
   end
 
+  defp handle_request(folding_range_req(_id, uri), state) do
+    case state.source_files[uri] do
+      nil ->
+        {:error, :server_error, "Missing source file", state}
+
+      source_file ->
+        fun = fn -> Folding.folding_ranges(source_file) end
+        {:async, fun, state}
+    end
+  end
+
   defp handle_request(request(_, _) = req, state) do
     handle_invalid_request(req, state)
   end
@@ -591,7 +603,8 @@ defmodule ElixirLS.LanguageServer.Server do
       "executeCommandProvider" => %{"commands" => ["spec:#{server_instance_id}"]},
       "workspace" => %{
         "workspaceFolders" => %{"supported" => false, "changeNotifications" => false}
-      }
+      },
+      "foldingRangeProvider" => true
     }
   end
 
