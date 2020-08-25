@@ -68,16 +68,20 @@ defmodule ElixirLS.LanguageServer.Providers.Folding do
   end
 
   defp get_last_line({:case, [line: line], [_, [do: block]]}) do
-    case Enum.at(block, -1) do
-      {:->, _, [_, expressions]} when is_list(expressions) ->
-        get_last_line(Enum.at(expressions, -1))
+    last_line =
+      case Enum.at(block, -1) do
+        {:->, _, [_, expressions]} when is_list(expressions) ->
+          get_last_line(Enum.at(expressions, -1))
 
-      {:->, [line: line], [_, _]} ->
-        line
+        {:->, [line: line], [_, _]} ->
+          line
 
-      _ ->
-        raise "This case should not reach"
-    end
+        _ ->
+          raise "This case should not reach"
+      end
+
+    # Plus 1 for end block
+    last_line + 1
   end
 
   defp get_last_line({:raise, [line: line], _}), do: line

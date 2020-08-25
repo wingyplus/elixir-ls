@@ -41,7 +41,7 @@ defmodule ElixirLS.LanguageServer.Providers.FoldingTest do
              }
              |> Folding.folding_ranges()
 
-    assert ranges == [%{"endLine" => 9, "startLine" => 0}]
+    assert ranges == [%{"endLine" => 10, "startLine" => 0}]
 
     assert {:ok, ranges} =
              %{
@@ -61,7 +61,7 @@ defmodule ElixirLS.LanguageServer.Providers.FoldingTest do
              }
              |> Folding.folding_ranges()
 
-    assert ranges == [%{"endLine" => 8, "startLine" => 0}]
+    assert ranges == [%{"endLine" => 9, "startLine" => 0}]
   end
 
   # Test self source that can be folding all entire module. It's complex enough
