@@ -9,7 +9,7 @@ defmodule ElixirLS.LanguageServer.Providers.Folding do
   def folding_ranges(source_file) do
     ranges =
       source_file.text
-      |> Code.string_to_quoted!()
+      |> Code.string_to_quoted!(line: 0)
       |> IO.inspect()
       |> do_block_folding_range()
 
@@ -23,8 +23,8 @@ defmodule ElixirLS.LanguageServer.Providers.Folding do
         # with lineFoldingOnly: true. So we can ignore it for now.
         [
           %{
-            "startLine" => line - 1,
-            "endLine" => line + get_last_line(body) - 1
+            "startLine" => line,
+            "endLine" => line + get_last_line(body) + 1
           }
         ]
 
