@@ -12,6 +12,8 @@ defmodule ElixirLS.LanguageServer.Providers.Folding do
   defp do_block_folding_range({:defmodule, [line: line], [_module, doblock]}) do
     case doblock do
       [do: {:__block__, [], body}] ->
+        # Currently, I didn't set startCharacter and endCharacter because vim-lsp request capabilities
+        # with lineFoldingOnly: true. So we can ignore it for now.
         [
           %{
             "startLine" => line - 1,
