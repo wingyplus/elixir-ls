@@ -24,6 +24,8 @@ defmodule ElixirLS.LanguageServer.Providers.Folding do
     end
   end
 
+  defp do_block_folding_range(_), do: []
+
   defp counting_line(statements) do
     {:def, [line: line], [_, body]} =
       statements
