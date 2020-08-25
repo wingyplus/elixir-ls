@@ -29,11 +29,17 @@ defmodule ElixirLS.LanguageServer.Providers.Folding do
   defp do_block_folding_range(_), do: []
 
   defp counting_line(statements) do
-    {:def, [line: line], [_, body]} =
+    last_statement =
       statements
       |> Enum.reverse()
       |> hd()
 
-    line + Enum.count(body)
+    case last_statement do
+      {:def, [line: line], [_, body]} ->
+        line + Enum.count(body)
+
+      {:defp, [line: line], [_, body]} ->
+        line + Enum.count(body)
+    end
   end
 end
